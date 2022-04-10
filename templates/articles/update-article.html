@@ -1,0 +1,39 @@
+{% extends "_base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+    <h3 class="mt-4 ml-2">Update Article: </h3>
+    <form method="POST" enctype="multipart/form-data" class="mt-4 ml-2">
+        {% csrf_token %}
+        <div class="form-group">
+            <p>{{ form.title.label }} :</p>
+            {% render_field form.title class+="form-control" placeholder="Title" id="title" type="text" name="title" required="true" %}
+        </div>
+
+        <div class="form-group">
+            {{ form.media }}
+            <p>{{ form.text.label }} :</p>
+            {% render_field form.text class+="form-control" required="true" %}
+        </div>
+
+        <div class="form-group">
+            <p>{{ form.image.label }} :</p>
+            {% render_field form.image class+="form-control-file" %}
+        </div>
+
+        <div class="form-group">
+            <p>{{ form.tags.label }} :</p>
+            {% render_field form.tags class+="form-control" required="true"%}
+        </div>
+        <input type="submit" value="Update" class="btn btn-primary btn-block mb-4 p-2" style="font-size: 1.3rem;">
+    </form>
+</div>
+
+{% load static %}
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+
+{% endblock content %}

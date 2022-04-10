@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+
+
+<section class="ftco-section contact-section">
+  <div class="container">
+    <div class="row d-flex mb-5 contact-info">
+      <div class="col-md-12 mb-4">
+        <h2 class="h3">Contact Information</h2>
+      </div>
+      <div class="w-100"></div>
+      <div class="col-md-4">
+        <p><span>Address : </span>Marmarita, Homs, Syria</p>
+      </div>
+      <div class="col-md-4">
+        <p><span>Phone : </span> +963 993 791 182 </p>
+      </div>
+      <div class="col-md-4">
+        <p>
+          <span>Email : </span>
+          <a href="mailto:fadi.rezek.salloum.97@gmail.com">fadi.rezek.salloum.97@gmail.com</a>
+        </p>
+      </div>
+    </div>
+    <div class="row block-9 no-gutters">
+      <h3>Leave a message:</h3>
+      <div class="col-lg-12 order-md-last d-flex">
+        <form action="" class="bg-light p-4 p-md-5 contact-form" method="post">
+
+          {% csrf_token %}
+
+          {% if not request.user.is_authenticated %}
+
+
+          <div class="form-group">
+            {% render_field form.name class+="form-control" type="text" name="name" placeholder="Name" required="true" %}
+          </div>
+          <div class="form-group">
+            {% render_field form.email class+="form-control" type="text" name="email" placeholder="Email" required="true" %}
+          </div>
+
+
+          {% endif %}
+
+          <div class="form-group">
+            {% render_field form.subject class+="form-control" type="text" name="subject" placeholder="Subject" required="true" %}
+          </div>
+          <div class="form-group">
+            {% render_field form.message class+="form-control" type="text" name="message" placeholder="Message..." required="true" %}
+          </div>
+
+
+          <input type="submit" value="Send" class="btn btn-primary btn-block p-2">
+        </form>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

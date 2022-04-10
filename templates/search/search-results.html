@@ -1,0 +1,77 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block content %}
+
+{% include 'search-input.html' %}
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row d-flex">
+            {% for article in queryset %}
+            <div class="col-md-4 d-flex flex-column ftco-animate">
+                <div class="blog-entry justify-content-end">
+                    <a href="{{ article.get_absolute_url }}" class="block-20 test"
+                        style="background-image: url('{{ article.image.url }}');">
+                    </a>
+                    <div class="text p-4 float-right d-block">
+                        <div class="topper d-flex align-items-center">
+                            <div class="one py-2 pl-3 pr-1 align-self-stretch">
+                                <span class="day">{{ article.daypublished }}</span>
+                            </div>
+                            <div class="two pl-0 pr-3 py-2 align-self-stretch">
+                                <span class="yr">{{ article.yearpublished }}</span>
+                                <span class="mos">{{ article.monthpublished }}</span>
+                            </div>
+                        </div>
+                        <h3 class="heading mb-3">
+                            <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+                        </h3>
+                        <p>{{article.text|safe }}.</p>
+                        <p><a href="{{ article.get_absolute_url }}" class="btn-custom"><span
+                                    class="ion-ios-arrow-round-forward mr-3"></span>Read more</a></p>
+                    </div>
+                </div>
+            </div>
+
+            {% empty %}
+            <div class="alert alert-secondary col-12">
+                <h4 style="text-align:center;">There are no search results!</h4>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row mt-5">
+            <div class="col text-center">
+                <div class="block-27">
+                    <ul>
+                        {% if queryset.has_previous %}
+                        <li>
+                            <a href="?page={{queryset.previous_page_number}}">&lt;</a>
+                        </li>
+                        {% endif %}
+
+                        {% for p in queryset.paginator.page_range %}
+                        {% if queryset.number == p %}
+                        <li class="active">
+                            <a href="?page={{p}}">{{p}}</a>
+                        </li>
+                        {% else %}
+                        <li>
+                            <a href="?page={{p}}">{{p}}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if queryset.has_next %}
+                        <li>
+                            <a href="?page={{queryset.next_page_number}}">&gt;</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

@@ -1,0 +1,157 @@
+{% extends "_base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+
+{% include 'search-input.html' %}
+
+<section class="ftco-section ftco-degree-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 ftco-animate">
+        <p class="mb-5">
+          <img src="{{article.image.url}}" alt="" class="img-fluid">
+        </p>
+        <h2 class="mb-3">{{ article.title }}</h2>
+        <p>{{ article.text|safe }}</p>
+
+        {% if request.user.username == article.user.user.username %}
+        <div class="row mt-5 ml-1">
+          <a href="{% url 'article-update' pk=article.id %}" class="btn btn-primary btn-lg mr-3">Update</a>
+          <a href="{% url 'article-delete' pk=article.id %}" class="btn btn-danger btn-lg">Delete</a>
+        </div>
+        {% endif %}
+
+        <div class="tag-widget post-tag-container mb-5 mt-5">
+          <div class="tagcloud">
+            {% for tag in tags %}
+            <a href="{% url 'tag-articles' tag.name %}" class="tag-cloud-link">
+              <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-tags-fill" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                  d="M3 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 7.586 1H3zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                <path
+                  d="M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
+              </svg>
+              {{ tag.name }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+
+        <h4 class="mb-3">Article Creator: </h4>
+        <div class="about-author d-flex p-4 bg-light">
+          <div class="bio mr-5">
+            <img src="{{ article.user.profile_picture.url }}" alt="Image placeholder" class="img-fluid mb-4"
+              style="border-radius: 50%; width:200px; height: 200px;">
+          </div>
+          <div class="desc col-md-5">
+            <h3>{{ article.user.user.first_name|capfirst }} {{ article.user.user.last_name|capfirst }}</h3>
+            <p> {{ article.user.bio }} </p>
+          </div>
+        </div>
+
+
+        <div class="pt-5 mt-5">
+          <h3 class="mb-5">{{ comment_count }} Comments</h3>
+          <ul class="comment-list">
+
+            {% for comment in get_comments %}
+            <li class="comment">
+              <div class="vcard bio">
+                <img src="{{comment.user.profile_picture.url}}" alt="i" class="comment-image">
+              </div>
+              <div class="comment-body">
+                <h3>{{ comment.user.user.first_name }} {{ comment.user.user.last_name }}</h3>
+                <div class="meta mb-3">
+                  {{ comment.timestamp }}
+
+                  {% if request.user.username == comment.user.user.username %}
+
+                  <a href="{% url 'delete-comment' comment.id %}" class="p-1" style="font-size : 1rem;">
+                    <i class="fas fa-trash-alt"></i>
+                  </a>
+                  <a href="{% url 'update-comment' comment.id %}" style="font-size : 1rem;">
+                    <i class="fas fa-edit"></i>
+                  </a>
+
+                  {% endif %}
+
+                </div>
+                <p> {{ comment.body }} </p>
+
+              </div>
+            </li>
+            {% endfor %}
+
+          </ul>
+          {% if request.user.is_authenticated %}
+
+          <div class="comment-form-wrap pt-5">
+            <h3 class="mb-5">Leave a comment:</h3>
+            <form action="" class="p-1 bg-light" method="post">
+              {% csrf_token %}
+              <p>Your Comment:</p>
+              {% render_field form.body class+="form-control" rows="3" cols="50" %}
+              <input type="submit" value="Comment" class="btn btn-primary btn-block">
+            </form>
+          </div>
+
+          {% else %}
+          <p>Sign in to leave a comment!</p>
+          {% endif %}
+        </div>
+
+      </div>
+      <div class="col-lg-4 sidebar pl-lg-5 ftco-animate">
+        <div class="sidebar-box ftco-animate">
+          <h3>Recent Blog</h3>
+
+          {% for article in latest_articles %}
+          <div class="block-21 mb-4 d-flex">
+            <a class="blog-img mr-4" style="background-image: url({{article.image.url}});"></a>
+            <div class="text">
+              <h3 class="heading">
+                <a href="article.get_absolute_url">
+                  {{ article.text|safe }}
+                </a>
+              </h3>
+              <div class="meta">
+                <div><span class="icon-calendar"></span> {{ article.timestamp }}<div>
+                    <div><span class="icon-person"></span> {{ article.user.user.first_name }}</div>
+                    <div><span class="icon-chat"></span> {{ article.comment_count }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+          <div class="sidebar-box ftco-animate">
+            <h3>Tag Cloud</h3>
+            <div class="tagcloud">
+
+              {% for tag in tags %}
+              <a href="{% url 'tag-articles' tag.name %}" class="tag-cloud-link">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-tags-fill" fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
+                    d="M3 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 7.586 1H3zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                  <path
+                    d="M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
+                </svg>
+                {{ tag.name }}
+              </a>
+              {% endfor %}
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+</section>
+
+{% endblock content %}

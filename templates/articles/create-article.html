@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container article-create">
+    <h3 class="mt-4 ml-2">Create an Article: </h3>
+    <form action="" method="post" enctype="multipart/form-data" class="mt-4 ml-2">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <p>{{ form.title.label }} :</p>
+            {% render_field form.title class+="form-control" placeholder="Title" id="title" type="text" name="title" required="true" %}
+        </div>
+
+        <div class="form-group">
+            {{ form.media }}
+            <p>{{ form.text.label }} :</p>
+            {% render_field form.text class+="form-control" required="true" %}
+        </div>
+
+        <div class="form-group">
+            <p>{{ form.image.label }} :</p>
+            {% render_field form.image class+="form-control-file" required="true" %}
+        </div>
+
+        <div class="form-group">
+            <p>{{ form.tags.label }} :</p>
+            {% render_field form.tags class+="form-control" required="true" %}
+            <span class="ml-5">Note: You can add multiple tags comma ( , ) seperated.</span>
+        </div>
+
+        <input type="submit" value="Create" class="btn btn-primary btn-block mb-4 p-2" style="font-size: 1.3rem;">
+    </form>
+</div>
+
+{% endblock content %}
